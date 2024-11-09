@@ -4,7 +4,7 @@ from typing import Any, List
 
 import requests
 from langchain_core.embeddings import Embeddings
-from pydantic import BaseModel, ConfigDict
+from langchain_core.pydantic_v1 import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,8 @@ class OVHCloudEmbeddings(BaseModel, Embeddings):
     """ OVHcloud AI Endpoints region"""
     region: str = "kepler"
 
-    model_config = ConfigDict(extra="forbid", protected_namespaces=())
+    class Config:
+        extra = "forbid"
 
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)

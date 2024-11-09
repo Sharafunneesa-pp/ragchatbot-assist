@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Annotated, Any, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from langchain_core.exceptions import OutputParserException
 from langchain_core.output_parsers import BaseOutputParser, StrOutputParser
 from langchain_core.prompts import BasePromptTemplate
 from langchain_core.runnables import Runnable, RunnableSerializable
-from pydantic import SkipValidation
 from typing_extensions import TypedDict
 
 from langchain.output_parsers.prompts import NAIVE_FIX_PROMPT
@@ -27,7 +26,7 @@ class OutputFixingParser(BaseOutputParser[T]):
     def is_lc_serializable(cls) -> bool:
         return True
 
-    parser: Annotated[BaseOutputParser[T], SkipValidation()]
+    parser: BaseOutputParser[T]
     """The parser to use to parse the output."""
     # Should be an LLMChain but we want to avoid top-level imports from langchain.chains
     retry_chain: Union[

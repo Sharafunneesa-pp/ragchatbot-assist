@@ -26,7 +26,7 @@ from langchain_core.messages import (
 )
 from langchain_core.output_parsers.transform import BaseOutputParser
 from langchain_core.outputs import ChatGeneration, ChatResult, Generation
-from pydantic import BaseModel, ConfigDict, Field
+from langchain_core.pydantic_v1 import BaseModel, Field
 
 LOG = logging.getLogger(__name__)
 
@@ -416,7 +416,7 @@ class ChatKinetica(BaseChatModel):
 
         # convert the prompt to messages
         # request = SuggestRequest.model_validate(prompt_json) # pydantic v2
-        request = _KdtoSuggestRequest.model_validate(prompt_json)
+        request = _KdtoSuggestRequest.parse_obj(prompt_json)
         payload = request.payload
 
         dict_messages = []
@@ -448,7 +448,7 @@ class ChatKinetica(BaseChatModel):
 
         data = response_json["data"]
         # response = CompletionResponse.model_validate(data) # pydantic v2
-        response = _KdtCompletionResponse.model_validate(data)
+        response = _KdtCompletionResponse.parse_obj(data)
         if response.status != "OK":
             raise ValueError("SQL Generation failed")
         return response.data
@@ -543,9 +543,8 @@ class KineticaSqlResponse(BaseModel):
     dataframe: Any = Field(default=None)
     """The Pandas dataframe containing the fetched data."""
 
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True,
-    )
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class KineticaSqlOutputParser(BaseOutputParser[KineticaSqlResponse]):
@@ -583,9 +582,8 @@ class KineticaSqlOutputParser(BaseOutputParser[KineticaSqlResponse]):
     kdbc: Any = Field(exclude=True)
     """ Kinetica DB connection. """
 
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True,
-    )
+    class Config:
+        arbitrary_types_allowed = True
 
     def parse(self, text: str) -> KineticaSqlResponse:
         df = self.kdbc.to_df(text)

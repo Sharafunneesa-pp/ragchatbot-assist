@@ -41,18 +41,17 @@ from langchain_core.output_parsers.openai_tools import (
     PydanticToolsParser,
 )
 from langchain_core.outputs import ChatGeneration, ChatGenerationChunk, ChatResult
+from langchain_core.pydantic_v1 import (
+    BaseModel,
+    Field,
+    SecretStr,
+    root_validator,
+)
 from langchain_core.runnables import Runnable, RunnableMap, RunnablePassthrough
 from langchain_core.tools import BaseTool
 from langchain_core.utils import convert_to_secret_str, get_from_dict_or_env
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from langchain_core.utils.pydantic import get_fields, is_basemodel_subclass
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    SecretStr,
-    model_validator,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -249,7 +248,7 @@ class QianfanChatEndpoint(BaseChatModel):
     Tool calling:
         .. code-block:: python
 
-            from pydantic import BaseModel, Field
+            from langchain_core.pydantic_v1 import BaseModel, Field
 
 
             class GetWeather(BaseModel):
@@ -288,7 +287,7 @@ class QianfanChatEndpoint(BaseChatModel):
 
             from typing import Optional
 
-            from pydantic import BaseModel, Field
+            from langchain_core.pydantic_v1 import BaseModel, Field
 
 
             class Joke(BaseModel):
@@ -346,7 +345,7 @@ class QianfanChatEndpoint(BaseChatModel):
     model_kwargs: Dict[str, Any] = Field(default_factory=dict)
     """extra params for model invoke using with `do`."""
 
-    client: Any = None  #: :meta private:
+    client: Any  #: :meta private:
 
     # It could be empty due to the use of Console API
     # And they're not list here
@@ -381,13 +380,11 @@ class QianfanChatEndpoint(BaseChatModel):
     endpoint: Optional[str] = None
     """Endpoint of the Qianfan LLM, required if custom model used."""
 
-    model_config = ConfigDict(
-        populate_by_name=True,
-    )
+    class Config:
+        allow_population_by_field_name = True
 
-    @model_validator(mode="before")
-    @classmethod
-    def validate_environment(cls, values: Dict) -> Any:
+    @root_validator(pre=True)
+    def validate_environment(cls, values: Dict) -> Dict:
         values["qianfan_ak"] = convert_to_secret_str(
             get_from_dict_or_env(
                 values, ["qianfan_ak", "api_key"], "QIANFAN_AK", default=""
@@ -750,7 +747,7 @@ class QianfanChatEndpoint(BaseChatModel):
             .. code-block:: python
 
                 from langchain_mistralai import QianfanChatEndpoint
-                from pydantic import BaseModel
+                from langchain_core.pydantic_v1 import BaseModel
 
                 class AnswerWithJustification(BaseModel):
                     '''An answer to the user question along with justification for the answer.'''
@@ -771,7 +768,7 @@ class QianfanChatEndpoint(BaseChatModel):
             .. code-block:: python
 
                 from langchain_mistralai import QianfanChatEndpoint
-                from pydantic import BaseModel
+                from langchain_core.pydantic_v1 import BaseModel
 
                 class AnswerWithJustification(BaseModel):
                     '''An answer to the user question along with justification for the answer.'''
@@ -792,7 +789,7 @@ class QianfanChatEndpoint(BaseChatModel):
             .. code-block:: python
 
                 from langchain_mistralai import QianfanChatEndpoint
-                from pydantic import BaseModel
+                from langchain_core.pydantic_v1 import BaseModel
                 from langchain_core.utils.function_calling import convert_to_openai_tool
 
                 class AnswerWithJustification(BaseModel):
