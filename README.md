@@ -13,7 +13,7 @@ This is a **web-based conversational AI** application that uses **Retrieval-Augm
 5. [Running the Application](#running-the-application)
 6. [Folder Structure](#folder-structure)
 7. [Contributing](#contributing)
-8. [License](#license)
+
 
 ---
 
@@ -49,19 +49,22 @@ Clone this repository to your local machine using the following command:
 
 ```bash
 git clone https://github.com/Sharafunneesa-pp/ragchatbot-assist.git
-cd ragchatbot-assist
+cd ragchatbot
 2. Create and Activate Conda Environment
 Create a new Conda environment with Python 3.11:
 
 conda create ragchat python==3.11
+
 Activate the environment:
 conda activate ragchat
+
 3. Install Dependencies
 Once the Conda environment is activated, install the required Python dependencies using pip:
 
 pip install -r requirements.txt
 
 4. Set Up Environment Variables
+
 Create a .env file in the root directory of your project to store your environment variables. The .env file should include the following:
 
 OPENAI_API_KEY=your_openai_api_key
@@ -90,7 +93,7 @@ Once the setup is complete and the environment variables are configured, you can
 
 python app.py
 
-his will start the Flask development server, and the application will be available at http://127.0.0.1:5000/ in your web browser.
+This will start the Flask development server, and the application will be available at http://127.0.0.1:5000/ in your web browser.
 
 
 🔑 Environment Variables
@@ -127,7 +130,7 @@ ragchatbot-assist/
 
 🤝 Contributing
 
-We welcome contributions! If you would like to contribute to this project, please follow these steps:
+I welcome contributions! If you would like to contribute to this project, please follow these steps:
 
 Fork the repository.
 Create a new branch for your changes.
