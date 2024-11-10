@@ -160,7 +160,7 @@ def user_input(user_question, chat_history):
 @app.route('/')
 def home():
     try:
-        return render_template('rag.html')  # Render the HTML page (rag.html should be created in templates)
+        return render_template('ragchat.html')  # Render the HTML page (rag.html should be created in templates)
     except Exception as e:
         logging.error(f"Error loading home page: {str(e)}")
         return "Sorry, something went wrong while loading the page."
